@@ -43,15 +43,21 @@ def lwlr(testPoint,xArr,yArr,k=1.0):
     m = shape(xMat)[0]
     weights = mat(eye((m)))
     for j in range(m):
+        #计算权重
         diffMat = testPoint - xMat[j,:]
         weights[j,j] = exp(diffMat*diffMat.T/(-2.0*k**2))
+
+    #奇异矩阵不计算
     xTx = xMat.T * (weights * xMat)
     if linalg.det(xTx) == 0.0:
         print "This matrix is singular, cannot do inverse"
         return
+
+    #回归系数
     ws = xTx.I * (xMat.T * (weights * yMat))
     return testPoint * ws
 
+#多所有点进行计算
 def lwlrTest(testArr,xArr,yArr,k=1.0):
     m = shape(testArr)[0]
     yHat = zeros(m)
